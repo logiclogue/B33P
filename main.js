@@ -1,0 +1,39 @@
+const c = document.getElementById("main-canvas");
+const ctx = c.getContext("2d");
+const imgData = ctx.createImageData(256, 192);
+
+// 0 - black
+// 1 - red
+// 2 - green
+// 3 - yellow
+// 4 - blue
+// 5 - pink
+// 6 - cyan
+// 7 - white
+
+let i;
+
+for (i = 0; i < imgData.data.length; i += 1) {
+    setPixelI(imgData, i, i);
+}
+
+ctx.putImageData(imgData, 0, 0);
+
+function xAndYToI(x, y) {
+    return (y * 256) + x;
+}
+
+function setPixelI(imgData, i, colourCode) {
+    const mainI = i * 4;
+
+    imgData.data[mainI + 0] = (colourCode % 2) * 255;
+    imgData.data[mainI + 1] = ((colourCode >> 1) % 2) * 255;
+    imgData.data[mainI + 2] = ((colourCode >> 2) % 2) * 255;
+    imgData.data[mainI + 3] = 255;
+}
+
+function setPixelXY(imgData, x, y, colourCode) {
+    const i = xAndYToI(x, y);
+
+    setPixelI(imgData, i, colourCode);
+}
