@@ -14,13 +14,31 @@ const imgData = ctx.createImageData(256, 192);
 let i;
 
 for (i = 0; i < imgData.data.length; i += 1) {
-    setPixelI(imgData, i, i);
+    setPixelI(imgData, i, getPixelColour(i));
 }
 
 ctx.putImageData(imgData, 0, 0);
 
 function xAndYToI(x, y) {
     return (y * 256) + x;
+}
+
+function getPixelColour(i) {
+    const colour = i % 3;
+
+    switch (colour) {
+    case 0:
+        return 1;
+
+    case 1:
+        return 2;
+
+    case 2:
+        return 4;
+
+    default:
+        return 0;
+    }
 }
 
 function setPixelI(imgData, i, colourCode) {
