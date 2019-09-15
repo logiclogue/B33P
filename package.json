@@ -1,0 +1,19 @@
+{
+  "name": "b33p",
+  "version": "1.0.0",
+  "description": "Good old hypothetical 8-bit machine",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/logiclogue/B33P.git"
+  },
+  "author": "",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/logiclogue/B33P/issues"
+  },
+  "homepage": "https://github.com/logiclogue/B33P#readme"
+}
