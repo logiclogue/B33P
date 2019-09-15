@@ -19,7 +19,7 @@ for (i = 0; i < imgData.data.length; i += 1) {
     setPixelI(imgData, i, getPixelColour(i));
 }
 
-ctx.putImageData(imgData, 0, 0);
+putImageData();
 
 function xAndYToI(x, y) {
     return (y * width) + x;
@@ -56,4 +56,8 @@ function setPixelXY(imgData, x, y, colourCode) {
     const i = xAndYToI(x, y);
 
     setPixelI(imgData, i, colourCode);
+}
+
+function putImageData() {
+    ctx.putImageData(imgData, 0, 0);
 }
