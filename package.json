@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/logiclogue/B33P/issues"
   },
-  "homepage": "https://github.com/logiclogue/B33P#readme"
+  "homepage": "https://github.com/logiclogue/B33P#readme",
+  "devDependencies": {
+    "webpack": "^4.40.2"
+  }
 }

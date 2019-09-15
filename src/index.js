@@ -1,6 +1,8 @@
 const c = document.getElementById("main-canvas");
 const ctx = c.getContext("2d");
-const imgData = ctx.createImageData(256, 192);
+const width = 512;
+const height = 384;
+const imgData = ctx.createImageData(width, height);
 
 // 0 - black
 // 1 - red
@@ -20,7 +22,7 @@ for (i = 0; i < imgData.data.length; i += 1) {
 ctx.putImageData(imgData, 0, 0);
 
 function xAndYToI(x, y) {
-    return (y * 256) + x;
+    return (y * width) + x;
 }
 
 function getPixelColour(i) {
