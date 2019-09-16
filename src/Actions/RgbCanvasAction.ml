@@ -1,4 +1,4 @@
-type on_or_off = int
+type on_or_off = bool
 type i         = int
 
 type t =

@@ -7,7 +7,7 @@
 // 6 - cyan
 // 7 - white
 
-function create() {
+export function create() {
     const c = document.getElementById("main-canvas");
     const ctx = c.getContext("2d");
     const width = 512;
@@ -19,7 +19,7 @@ function create() {
     };
 }
 
-function start(self) {
+export function start(self) {
     setInterval(() => {
         for (i = 0; i < self.imgData.data.length; i += 1) {
             if (Math.floor(Math.random() * 2) % 2 === 0) {
@@ -37,7 +37,7 @@ function xAndYToI(x, y) {
     return (y * width) + x;
 }
 
-function setPixelI(self, i, onOrOff) {
+export function setPixelI(self, i, onOrOff) {
     const mainI = i * 4;
     const colour = i % 3;
 
@@ -61,6 +61,6 @@ function setPixelXY(self, x, y) {
     setPixelI(self.imgData, i);
 }
 
-function putData(self) {
+export function putData(self) {
     ctx.putImageData(self.imgData, 0, 0);
 }
