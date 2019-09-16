@@ -3,5 +3,5 @@ type i         = int
 
 type t =
     | Clear
-    | SetPixel of i * on_or_off
+    | SetPixelI of i * on_or_off
     | PutData
