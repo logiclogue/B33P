@@ -21,11 +21,12 @@ export function create() {
 
 export function start(self) {
     setInterval(() => {
-        for (i = 0; i < self.imgData.data.length; i += 1) {
+
+        for (let i = 0; i < self.imgData.data.length; i += 1) {
             if (Math.floor(Math.random() * 2) % 2 === 0) {
-                setPixelI(self.imgData, i, true);
+                setPixelI(self);
             } else {
-                setPixelI(self.imgData, i, false);
+                setPixelI(self, i, false);
             }
         }
 
@@ -62,5 +63,5 @@ function setPixelXY(self, x, y) {
 }
 
 export function putData(self) {
-    ctx.putImageData(self.imgData, 0, 0);
+    self.ctx.putImageData(self.imgData, 0, 0);
 }

@@ -23,6 +23,7 @@ external put_data
     [@@bs.module "./RgbCanvas"] [@@bs.val]
 
 let dispatch self = function
+    | Start                    -> start self
     | SetPixelI (i, on_or_off) -> set_pixel_i self i on_or_off
     | PutData                  -> put_data self
     | _                        -> ()
