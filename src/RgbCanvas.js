@@ -20,8 +20,6 @@ export function create() {
 }
 
 export function start(self) {
-    console.log("HERE");
-
     setInterval(() => {
         for (let i = 0; i < self.imgData.data.length; i += 1) {
             if (Math.floor(Math.random() * 2) % 2 === 0) {
