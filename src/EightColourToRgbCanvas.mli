@@ -1,1 +1,1 @@
-val set_pixel_xy : int -> int -> RgbCanvasAction.t list
+val set_pixel_xy : int -> int -> int -> RgbCanvasAction.t list
