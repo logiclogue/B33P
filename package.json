@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "bs-helpers": "^1.0.5",
-    "bs-platform": "^5.0.6"
+    "bs-platform": "^5.0.6",
+    "rxjs": "^6.5.3"
   }
 }
