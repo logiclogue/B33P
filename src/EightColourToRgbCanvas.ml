@@ -24,3 +24,9 @@ let set_pixel_xy x y colour =
         RgbCanvasAction.SetPixelI (xy_to_i new_x (new_y + 1), get_colour new_x (new_y + 1));
         RgbCanvasAction.SetPixelI (xy_to_i (new_x + 1) (new_y + 1), get_colour (new_x + 1) (new_y + 1));
     ]
+
+let clear = [RgbCanvasAction.Clear]
+
+let f action = match action with
+    | EightColourCanvas.Clear                     -> clear
+    | EightColourCanvas.SetPixelXY (x, y, colour) -> set_pixel_xy x y colour
