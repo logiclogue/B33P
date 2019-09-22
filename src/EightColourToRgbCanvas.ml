@@ -10,11 +10,11 @@ let set_pixel_xy x y colour =
     let xy_to_i = _xy_to_i width in
 
     let is_bit_set n_digit number =
-        ((number asr n_digit) land 1) == 1 in
+        (((number lsl n_digit) asr 2) land 1) == 1 in
 
     let get_colour x y =
         let i = xy_to_i x y in
-        let prim_colour = 2 - (i mod 3) in
+        let prim_colour = i mod 3 in
 
         is_bit_set prim_colour colour in
 

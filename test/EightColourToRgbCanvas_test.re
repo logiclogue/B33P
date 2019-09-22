@@ -35,10 +35,23 @@ describe("EightColourToRgbCanvas", () => {
 
             it("returns [(2, 1), (3, 0), (514, 1), (515, 1)]", () => {
                 expect(result)->t->deep->equal([
-                    RgbCanvasAction.SetPixelI(2, false),
-                    RgbCanvasAction.SetPixelI(3, true),
+                    RgbCanvasAction.SetPixelI(2, true),
+                    RgbCanvasAction.SetPixelI(3, false),
                     RgbCanvasAction.SetPixelI(514, true),
-                    RgbCanvasAction.SetPixelI(515, false)
+                    RgbCanvasAction.SetPixelI(515, true)
+                ]);
+            });
+        });
+
+        context("given 6, 7, 3", () => {
+            let result = set_pixel_xy(6, 7, 3);
+
+            it("returns [!!!!]", () => {
+                expect(result)->t->deep->equal([
+                    RgbCanvasAction.SetPixelI(7180, true),
+                    RgbCanvasAction.SetPixelI(7181, false),
+                    RgbCanvasAction.SetPixelI(7692, true),
+                    RgbCanvasAction.SetPixelI(7693, true)
                 ]);
             });
         });
