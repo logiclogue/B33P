@@ -4,7 +4,7 @@ open EightColourToRgbCanvas;
 
 describe("EightColourToRgbCanvas", () => {
     describe("set_pixel_xy", () => {
-        context("given 0, 0, 0", () => {
+        context("given colour 0 and coords 0, 0", () => {
             let result = set_pixel_xy(0, 0, 0);
 
             it("returns [(0, 0), (1, 0), (512, 0), (513, 0)]", () => {
@@ -17,8 +17,8 @@ describe("EightColourToRgbCanvas", () => {
             });
         });
 
-        context("given 0, 0, 7", () => {
-            let result = set_pixel_xy(0, 0, 7);
+        context("given colour 7 and coords 0, 0", () => {
+            let result = set_pixel_xy(7, 0, 0);
 
             it("returns [(0, 1), (1, 1), (512, 1), (513, 1)]", () => {
                 expect(result)->t->deep->equal([
@@ -30,8 +30,8 @@ describe("EightColourToRgbCanvas", () => {
             });
         });
 
-        context("given 1, 0, 6", () => {
-            let result = set_pixel_xy(1, 0, 6);
+        context("given colour 6 and coord 1, 0") => {
+            let result = set_pixel_xy(6, 1, 0);
 
             it("returns [(2, 1), (3, 0), (514, 1), (515, 1)]", () => {
                 expect(result)->t->deep->equal([
@@ -43,8 +43,8 @@ describe("EightColourToRgbCanvas", () => {
             });
         });
 
-        context("given 6, 7, 3", () => {
-            let result = set_pixel_xy(6, 7, 3);
+        context("given colour 3 and coords 6, 7", () => {
+            let result = set_pixel_xy(3, 6, 7);
 
             it("returns [!!!!]", () => {
                 expect(result)->t->deep->equal([

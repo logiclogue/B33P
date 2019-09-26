@@ -2,7 +2,7 @@ let () =
     let canvas = RgbCanvas.create () in
 
     RxJS.create_of_list [
-        SpriteCanvas.DrawSprite ([[2; 2]; [2; 2]], 6, 7);
+        SpriteCanvas.DrawSprite ([[0; 0]; [0; 0]], 0, 0);
     ]
         |> RxJS.map SpriteToEightCanvas.f
         |> RxJS.concat_list

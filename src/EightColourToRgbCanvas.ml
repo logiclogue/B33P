@@ -3,7 +3,7 @@ let width = 512
 let _xy_to_i width x y =
     (y * width) + x
 
-let set_pixel_xy x y colour =
+let set_pixel_xy colour x y =
     let new_x = x * 2 in
     let new_y = y * 2 in
 
@@ -29,4 +29,4 @@ let clear = [RgbCanvasAction.Clear]
 
 let f action = match action with
     | EightColourCanvas.Clear                     -> clear
-    | EightColourCanvas.SetPixelXY (x, y, colour) -> set_pixel_xy x y colour
+    | EightColourCanvas.SetPixelXY (colour, x, y) -> set_pixel_xy colour x y
