@@ -30,7 +30,7 @@ describe("EightColourToRgbCanvas", () => {
             });
         });
 
-        context("given colour 6 and coord 1, 0") => {
+        context("given colour 6 and coord 1, 0", () => {
             let result = set_pixel_xy(6, 1, 0);
 
             it("returns [(2, 1), (3, 0), (514, 1), (515, 1)]", () => {
