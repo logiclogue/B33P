@@ -38,7 +38,6 @@ function xAndYToI(x, y) {
 }
 
 export function setPixelI(self, i, onOrOff) {
-    console.log("HERE");
     const mainI = i * 4;
     const colour = i % 3;
 
@@ -46,12 +45,6 @@ export function setPixelI(self, i, onOrOff) {
     self.imgData.data[mainI + 1] = boolToInt(colour === 1 && onOrOff) * 255;
     self.imgData.data[mainI + 2] = boolToInt(colour === 2 && onOrOff) * 255;
     self.imgData.data[mainI + 3] = 255;
-
-    console.log(i, mainI);
-    console.log(mainI + 0, self.imgData.data[mainI + 0]);
-    console.log(mainI + 1, self.imgData.data[mainI + 1]);
-    console.log(mainI + 2, self.imgData.data[mainI + 2]);
-    console.log(mainI + 3, self.imgData.data[mainI + 3]);
 }
 
 function boolToInt(b) {
