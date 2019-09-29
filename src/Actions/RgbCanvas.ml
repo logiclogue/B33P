@@ -5,22 +5,22 @@ type t = Js.Json.t
 external create
     : unit -> t
     = "create"
-    [@@bs.module "./RgbCanvas"] [@@bs.val]
+    [@@bs.module "../Foreign/RgbCanvas"] [@@bs.val]
 
 external start
     : t -> unit
     = "start"
-    [@@bs.module "./RgbCanvas"] [@@bs.val]
+    [@@bs.module "../Foreign/RgbCanvas"] [@@bs.val]
 
 external set_pixel_i
     : t -> int -> bool -> unit
     = "setPixelI"
-    [@@bs.module "./RgbCanvas"] [@@bs.val]
+    [@@bs.module "../Foreign/RgbCanvas"] [@@bs.val]
 
 external put_data
     : t -> unit
     = "putData"
-    [@@bs.module "./RgbCanvas"] [@@bs.val]
+    [@@bs.module "../Foreign/RgbCanvas"] [@@bs.val]
 
 let dispatch self = function
     | Start                    -> start self
