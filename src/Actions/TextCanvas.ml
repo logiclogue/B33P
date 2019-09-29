@@ -1,4 +1,4 @@
 type t =
     | Clear
-    | DrawChar of char
-    | DrawText of string
+    | DrawChar of char * int * int
+    | DrawText of string * int * int
