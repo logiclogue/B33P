@@ -28,4 +28,21 @@ describe("TextToSpriteCanvas", () => {
             });
         });
     });
+
+    describe("draw_text", () => {
+        context("given 'AB'", () => {
+            let result = draw_text("AB", 4, 2);
+
+            it("returns the relevant sprite", () => {
+                expect(result)->t->deep->equal([
+                    SpriteCanvas.DrawSprite(
+                        CharacterSprites.find('A'), 4, 2
+                    ),
+                    SpriteCanvas.DrawSprite(
+                        CharacterSprites.find('B'), 4, 2
+                    )
+                ]);
+            });
+        });
+    });
 });
