@@ -1,1 +1,1 @@
-val draw_char : char -> SpriteCanvas.t list
+val draw_char : char -> int -> int -> SpriteCanvas.t list
