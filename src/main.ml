@@ -1,3 +1,5 @@
+open Core
+
 let () =
     let canvas = RgbCanvas.create () in
 
