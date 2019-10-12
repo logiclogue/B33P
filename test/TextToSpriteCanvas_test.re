@@ -39,7 +39,7 @@ describe("TextToSpriteCanvas", () => {
                         CharacterSprites.find('A'), 4, 2
                     ),
                     SpriteCanvas.DrawSprite(
-                        CharacterSprites.find('B'), 4, 2
+                        CharacterSprites.find('B'), 12, 2
                     )
                 ]);
             });

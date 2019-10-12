@@ -1,21 +1,11 @@
 let () =
     let canvas = RgbCanvas.create () in
 
-    let letter_a = [
-        [0; 0; 7; 7; 7; 7; 0; 0];
-        [0; 7; 7; 0; 0; 7; 7; 0];
-        [0; 7; 7; 0; 0; 7; 7; 0];
-        [0; 7; 7; 7; 7; 7; 7; 0];
-        [0; 7; 7; 0; 0; 7; 7; 0];
-        [0; 7; 7; 0; 0; 7; 7; 0];
-        [0; 7; 7; 0; 0; 7; 7; 0];
-        [0; 0; 0; 0; 0; 0; 0; 0];
-    ] in
-
     RxJS.create_of_list [
-        SpriteCanvas.DrawSprite (letter_a, 0, 10);
-        SpriteCanvas.DrawSprite (letter_a, 8, 10);
+        TextCanvas.DrawText ("AAAB", 1, 1);
     ]
+        |> RxJS.map TextToSpriteCanvas.f
+        |> RxJS.concat_list
         |> RxJS.map SpriteToEightCanvas.f
         |> RxJS.concat_list
         |> RxJS.map EightColourToRgbCanvas.f
