@@ -2,7 +2,7 @@ let () =
     let canvas = RgbCanvas.create () in
 
     RxJS.create_of_list [
-        TextCanvas.DrawText ("ABCDEFG", 1, 1);
+        TextCanvas.DrawText ("ABCDEFG", 1, 1, 7);
     ]
         |> RxJS.map TextToSpriteCanvas.f
         |> RxJS.concat_list
