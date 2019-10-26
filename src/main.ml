@@ -17,7 +17,11 @@ let () =
         SetFont CharacterSprites.find;
         DrawSprite ("character", (50, 30));
         DrawText ("JORDAN", (50, 0));
-    ]
+    ] (* : GraphicsV1.t observable *)
+    (* : GraphicsV1.t -> GraphicsV1State.t *)
+    (* scan : ('b -> GraphicsV1.t -> int -> 'b) -> 'b -> (GraphicsV1.t, 'b) operator_function *)
+    (* : GraphicsV1.t -> GraphicsV1State.t -> SpriteCanvas.t list *)
+    (* : GraphicsV1.t observable -> SpriteCanvas.t observable *)
         (*|> RxJS.map TextToSpriteCanvas.f
         |> RxJS.concat_list
         |> RxJS.map SpriteToEightCanvas.f
