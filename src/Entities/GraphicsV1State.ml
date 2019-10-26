@@ -14,3 +14,6 @@ let get_sprite_sheet { sprite_sheet } =
 
 let get_font { font } =
     font
+
+let find_sprite id { sprite_sheet } =
+    sprite_sheet id
