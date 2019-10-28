@@ -8,7 +8,7 @@ let sprite_sheet id =
         (* TODO: THE REST OF SPRITE *)
     ]
 
-let actions_to_state state action =
+let actions_to_state (state : GraphicsV1State.t) (action : GraphicsV1.t) : GraphicsV1State.t =
     GraphicsV1.(GraphicsV1State.(
         match action with
         | Clear -> state
@@ -18,7 +18,7 @@ let actions_to_state state action =
         | DrawText _ -> state
     ))
 
-let action_to_actions action state =
+let action_to_actions (action : GraphicsV1.t) (state : GraphicsV1State.t) : SpriteCanvas.t list =
     GraphicsV1.(GraphicsV1State.(
         match action with
         | Clear -> [SpriteCanvas.Clear]
@@ -30,6 +30,19 @@ let action_to_actions action state =
             TextToSpriteCanvas.draw_text text x y 1
     ))
 
+let graphics_v1_obs_to_sprite_obs (graphics_v1_obs : GraphicsV1.t RxJS.observable) : SpriteCanvas.t RxJS.observable =
+    graphics_v1_obs
+        |> RxJS.scan (fun state action _ -> actions_to_state state action) GraphicsV1State.default
+    (* : GraphicsV1.t -> GraphicsV1State.t *)
+    (* scan : (GraphicsV1State.t -> GraphicsV1.t -> int -> GraphicsV1State.t) -> GraphicsV1State.t -> (GraphicsV1.t, GraphicsV1State.t) operator_function *)
+    (* : GraphicsV1.t -> GraphicsV1State.t -> SpriteCanvas.t list *)
+    (* : GraphicsV1.t observable -> SpriteCanvas.t observable *)
+        (*|> RxJS.map TextToSpriteCanvas.f
+        |> RxJS.concat_list
+        |> RxJS.map SpriteToEightCanvas.f
+        |> RxJS.concat_list*)
+    
+
 let () =
     let canvas = RgbCanvas.create () in
 
@@ -39,15 +52,10 @@ let () =
         SetFont CharacterSprites.find;
         DrawSprite ("character", (50, 30));
         DrawText ("JORDAN", (50, 0));
-    ] (* : GraphicsV1.t observable *)
-    (* : GraphicsV1.t -> GraphicsV1State.t *)
-    (* scan : (GraphicsV1State.t -> GraphicsV1.t -> int -> GraphicsV1State.t) -> GraphicsV1State.t -> (GraphicsV1.t, GraphicsV1State.t) operator_function *)
-    (* : GraphicsV1.t -> GraphicsV1State.t -> SpriteCanvas.t list *)
-    (* : GraphicsV1.t observable -> SpriteCanvas.t observable *)
-        (*|> RxJS.map TextToSpriteCanvas.f
-        |> RxJS.concat_list
+    ]
+        |> graphics_v1_obs_to_sprite_obs
         |> RxJS.map SpriteToEightCanvas.f
-        |> RxJS.concat_list*)
+        |> RxJS.concat_list
         |> RxJS.map EightColourToRgbCanvas.f
         |> RxJS.concat_list
         |> RxJS.map (fun action -> [action; RgbCanvasAction.PutData])

@@ -1,5 +1,7 @@
 type t
 
+val default : t
+
 val set_sprite_sheet : (GraphicsV1.id -> int list list) -> t -> t
 val set_font : (char -> int list list) -> t -> t
 
