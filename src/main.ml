@@ -31,17 +31,15 @@ let action_to_actions (action : GraphicsV1.t) (state : GraphicsV1State.t) : Spri
     ))
 
 let graphics_v1_obs_to_sprite_obs (graphics_v1_obs : GraphicsV1.t RxJS.observable) : SpriteCanvas.t RxJS.observable =
+    let state_obs = graphics_v1_obs
+        |> RxJS.scan (fun state action _ ->
+            actions_to_state state action
+        ) GraphicsV1State.default in
+
     graphics_v1_obs
-        |> RxJS.scan (fun state action _ -> actions_to_state state action) GraphicsV1State.default
-    (* : GraphicsV1.t -> GraphicsV1State.t *)
-    (* scan : (GraphicsV1State.t -> GraphicsV1.t -> int -> GraphicsV1State.t) -> GraphicsV1State.t -> (GraphicsV1.t, GraphicsV1State.t) operator_function *)
-    (* : GraphicsV1.t -> GraphicsV1State.t -> SpriteCanvas.t list *)
-    (* : GraphicsV1.t observable -> SpriteCanvas.t observable *)
-        (*|> RxJS.map TextToSpriteCanvas.f
+        |> RxJS.with_latest_from state_obs
+        |> RxJS.map (fun (action, state) -> action_to_actions action state)
         |> RxJS.concat_list
-        |> RxJS.map SpriteToEightCanvas.f
-        |> RxJS.concat_list*)
-    
 
 let () =
     let canvas = RgbCanvas.create () in
