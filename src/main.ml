@@ -14,6 +14,7 @@ let actions_to_state (state : GraphicsV1State.t) (action : GraphicsV1.t) : Graph
         | Clear -> state
         | SetSpriteSheet sprite_sheet -> set_sprite_sheet sprite_sheet state
         | SetFont font -> set_font font state
+        | SetTextColour text_colour -> set_text_colour text_colour state
         | DrawSprite _ -> state
         | DrawText _ -> state
     ))
@@ -24,10 +25,11 @@ let action_to_actions (action : GraphicsV1.t) (state : GraphicsV1State.t) : Spri
         | Clear -> [SpriteCanvas.Clear]
         | SetSpriteSheet sprite_sheet -> []
         | SetFont font -> []
+        | SetTextColour text_colour -> []
         | DrawSprite (sprite, (x, y)) ->
             [SpriteCanvas.DrawSprite (find_sprite sprite state, x, y)]
         | DrawText (text, (x, y)) ->
-            TextToSpriteCanvas.draw_text text x y 1
+            TextToSpriteCanvas.draw_text text x y (get_text_colour state)
     ))
 
 let graphics_v1_obs_to_sprite_obs (graphics_v1_obs : GraphicsV1.t RxJS.observable) : SpriteCanvas.t RxJS.observable =
@@ -48,6 +50,7 @@ let () =
         Clear;
         SetSpriteSheet sprite_sheet;
         SetFont CharacterSprites.find;
+        SetTextColour Colours.white;
         DrawSprite ("character", (50, 30));
         DrawText ("JORDAN", (50, 0));
     ]
