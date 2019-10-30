@@ -33,14 +33,14 @@ let action_to_actions (action : GraphicsV1.t) (state : GraphicsV1State.t) : Spri
     ))
 
 let graphics_v1_obs_to_sprite_obs (graphics_v1_obs : GraphicsV1.t RxJS.observable) : SpriteCanvas.t RxJS.observable =
-    let state_obs = graphics_v1_obs
-        |> RxJS.scan (fun state action _ ->
-            actions_to_state state action
-        ) GraphicsV1State.default in
+    let f (_, old_state) action _ = 
+        let state = actions_to_state old_state action in
+
+        (action_to_actions action state, state) in
 
     graphics_v1_obs
-        |> RxJS.with_latest_from state_obs
-        |> RxJS.map (fun (action, state) -> action_to_actions action state)
+        |> RxJS.scan f ([], GraphicsV1State.default)
+        |> RxJS.map (fun (actions, _) -> actions)
         |> RxJS.concat_list
 
 let () =
@@ -52,7 +52,10 @@ let () =
         SetFont CharacterSprites.find;
         SetTextColour Colours.white;
         DrawSprite ("character", (50, 30));
+        SetTextColour Colours.white;
         DrawText ("JORDAN", (50, 0));
+        SetTextColour Colours.blue;
+        DrawText ("BLAH", (50, 8));
     ]
         |> graphics_v1_obs_to_sprite_obs
         |> RxJS.map SpriteToEightCanvas.f
