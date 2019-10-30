@@ -8,31 +8,10 @@ let sprite_sheet id =
         (* TODO: THE REST OF SPRITE *)
     ]
 
-let actions_to_state (state : GraphicsV1State.t) (action : GraphicsV1.t) : GraphicsV1State.t =
-    GraphicsV1.(GraphicsV1State.(
-        match action with
-        | Clear -> state
-        | SetSpriteSheet sprite_sheet -> set_sprite_sheet sprite_sheet state
-        | SetFont font -> set_font font state
-        | SetTextColour text_colour -> set_text_colour text_colour state
-        | DrawSprite _ -> state
-        | DrawText _ -> state
-    ))
-
-let action_to_actions (action : GraphicsV1.t) (state : GraphicsV1State.t) : SpriteCanvas.t list =
-    GraphicsV1.(GraphicsV1State.(
-        match action with
-        | Clear -> [SpriteCanvas.Clear]
-        | SetSpriteSheet sprite_sheet -> []
-        | SetFont font -> []
-        | SetTextColour text_colour -> []
-        | DrawSprite (sprite, (x, y)) ->
-            [SpriteCanvas.DrawSprite (find_sprite sprite state, x, y)]
-        | DrawText (text, (x, y)) ->
-            TextToSpriteCanvas.draw_text text x y (get_text_colour state)
-    ))
-
 let graphics_v1_obs_to_sprite_obs (graphics_v1_obs : GraphicsV1.t RxJS.observable) : SpriteCanvas.t RxJS.observable =
+    let action_to_actions = GraphicsV1ToSpriteCanvas.f in
+    let actions_to_state = GraphicsV1Reducer.reduce in
+
     let f (_, old_state) action _ = 
         let state = actions_to_state old_state action in
 
