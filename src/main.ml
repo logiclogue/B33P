@@ -16,6 +16,8 @@ let animations id =
     | "ABC" -> (["A"; "B"; "C"], 300)
     | _ -> (["A"], 1000)
 
+let graphics_v2_to_graphics_v1_obs (gra)(**!!!TODO!!!!!!1**)
+
 let () =
     let canvas = RgbCanvas.create () in
 
@@ -28,6 +30,7 @@ let () =
         CreateEntity ("Jordan", (50, 50));
         SetAnimation ("Jordan", "ABC");
     ]
+        |> graphics_v2_to_graphics_v1_obs
         |> GraphicsV1ToSpriteObs.f
         |> RxJS.map SpriteToEightCanvas.f
         |> RxJS.concat_list
