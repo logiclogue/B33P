@@ -1,5 +1,8 @@
 let sprite_sheet id =
     match id with
+    | "A" -> CharacterSprites.find 'A'
+    | "B" -> CharacterSprites.find 'B'
+    | "C" -> CharacterSprites.find 'C'
     | _ -> [
         [0; 0; 0; 1; 1; 1; 1; 1; 0; 0; 0; 0];
         [0; 0; 1; 1; 1; 1; 1; 1; 1; 1; 1; 0];
@@ -8,19 +11,22 @@ let sprite_sheet id =
         (* TODO: THE REST OF SPRITE *)
     ]
 
+let animations id =
+    match id with
+    | "ABC" -> (["A"; "B"; "C"], 300)
+    | _ -> (["A"], 1000)
+
 let () =
     let canvas = RgbCanvas.create () in
 
-    RxJS.create_of_list GraphicsV1.[
-        Clear;
+    RxJS.create_of_list GraphicsV2.[
         SetSpriteSheet sprite_sheet;
         SetFont CharacterSprites.find;
         SetTextColour Colours.white;
-        DrawSprite ("character", (50, 30));
-        SetTextColour Colours.white;
-        DrawText ("JORDAN", (50, 0));
-        SetTextColour Colours.blue;
-        DrawText ("BLAH", (50, 8));
+        SetAnimations animations;
+
+        CreateEntity ("Jordan", (50, 50));
+        SetAnimation ("Jordan", "ABC");
     ]
         |> GraphicsV1ToSpriteObs.f
         |> RxJS.map SpriteToEightCanvas.f

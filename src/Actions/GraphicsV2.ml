@@ -1,5 +1,6 @@
 type entity_id = string
 type sprite_id = string
+type animation_id = string
 type time_interval_ms = int
 type coords = int * int
 
