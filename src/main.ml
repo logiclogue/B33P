@@ -16,7 +16,38 @@ let animations id =
     | "ABC" -> (["A"; "B"; "C"], 300)
     | _ -> (["A"], 1000)
 
-let graphics_v2_to_graphics_v1_obs (gra)(**!!!TODO!!!!!!1**)
+let actions_to_state (state : GraphicsV2State.t) (action : GraphicsV2.t) : GraphicsV2State.t =
+    GraphicsV2State.(GraphicsV2.(
+        match action with
+        | SetSpriteSheet sprite_sheet -> state
+        | SetFont font -> state
+        | SetAnimations animations -> set_animations animations state
+        | SetTextColour colour -> state
+        | CreateEntity (entity_id, coords) -> create_entity entity_id coords state
+        | SetAnimation (entity_id, animation_id) -> set_animation entity_id animation_id state
+    ))
+
+let actions_to_actions (action : GraphicsV2.t) (state : GraphicsV2State.t) : GraphicsV1Action.t list =
+    GraphicsV2.(
+        match action with
+        | SetSpriteSheet sprite_sheet -> [GraphicsV1.SetSpriteSheet sprite_sheet]
+        | SetFont font -> [GraphicsV1.SetFont font]
+        | SetAnimations _ -> []
+        | SetTextColour colour -> [GraphicsV1.SetTextColour colour]
+        | CreateEntity _ -> []
+        | SetAnimation _ -> []
+    )
+
+let graphics_v2_to_graphics_v1_obs (graphics_v1_obs : GraphicsV1.t RxJS.observable) : GraphicsV2.t RxJS.observable =
+    let f (_, old_state) action _ =
+        let state = actions_to_state old_state action in
+
+        (action_to_actions action state, state) in
+
+    graphics_v1_obs
+        |> RxJS.scan f ([], GraphicsV2State.default)
+        |> RxJS.map (fun (actions, _) -> actions)
+        |> RxJS.concat_list
 
 let () =
     let canvas = RgbCanvas.create () in
