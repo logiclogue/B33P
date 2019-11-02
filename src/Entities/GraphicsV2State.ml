@@ -4,8 +4,14 @@ type t = {
     animation_to_entity : (string * string) list;
 }
 
+let default = {
+    animations = (fun _ -> ([], 0));
+    entities = [];
+    animation_to_entity = [];
+}
+
 let set_animations animations self =
-    { animations with self }
+    { self with animations }
 
 let create_entity entity_id coords self =
     let { entities } = self in

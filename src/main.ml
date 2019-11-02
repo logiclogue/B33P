@@ -27,7 +27,7 @@ let actions_to_state (state : GraphicsV2State.t) (action : GraphicsV2.t) : Graph
         | SetAnimation (entity_id, animation_id) -> set_animation entity_id animation_id state
     ))
 
-let actions_to_actions (action : GraphicsV2.t) (state : GraphicsV2State.t) : GraphicsV1Action.t list =
+let action_to_actions (action : GraphicsV2.t) (state : GraphicsV2State.t) : GraphicsV1.t list =
     GraphicsV2.(
         match action with
         | SetSpriteSheet sprite_sheet -> [GraphicsV1.SetSpriteSheet sprite_sheet]
@@ -39,12 +39,13 @@ let actions_to_actions (action : GraphicsV2.t) (state : GraphicsV2State.t) : Gra
     )
 
 let graphics_v2_to_graphics_v1_obs (graphics_v1_obs : GraphicsV1.t RxJS.observable) : GraphicsV2.t RxJS.observable =
-    let f (_, old_state) action _ =
+    let f ((_, old_state) : (GraphicsV1.t list * GraphicsV2State.t)) (action : GraphicsV2.t) (_ : int) =
         let state = actions_to_state old_state action in
 
         (action_to_actions action state, state) in
 
     graphics_v1_obs
+        (* ((GraphicsV1.t list * GraphicsV2State.t) -> GraphicsV2.t -> int -> (GraphicsV1.t list * GraphicsV2State.t) -> 'b -> (GraphicsV2.t, (GraphicsV1.t list * GraphicsV2State.t)) RxJS.operator_function *)
         |> RxJS.scan f ([], GraphicsV2State.default)
         |> RxJS.map (fun (actions, _) -> actions)
         |> RxJS.concat_list
