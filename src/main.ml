@@ -44,10 +44,14 @@ let graphics_v2_to_graphics_v1_obs (graphics_v2_obs : GraphicsV2.t RxJS.observab
 
         (action_to_actions action state, state) in
 
-    graphics_v2_obs
+    let actions_obs = graphics_v2_obs
         |> RxJS.scan f ([], GraphicsV2State.default)
         |> RxJS.map (fun (actions, _) -> actions)
-        |> RxJS.concat_list
+        |> RxJS.concat_list in
+
+    RxJS.interval 1000 RxJS.animation_frame
+        |> RxJS.merge_map (fun _ -> actions_obs)
+        |> RxJS.tap Js.log
 
 let () =
     let canvas = RgbCanvas.create () in
