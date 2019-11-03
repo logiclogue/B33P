@@ -50,7 +50,8 @@ let graphics_v2_to_graphics_v1_obs (graphics_v2_obs : GraphicsV2.t RxJS.observab
         |> RxJS.concat_list in
 
     RxJS.interval 1000 RxJS.animation_frame
-        |> RxJS.merge_map (fun _ -> actions_obs)
+        |> RxJS.with_latest_from actions_obs
+        |> RxJS.map (fun (_, action) -> action)
         |> RxJS.tap Js.log
 
 let () =
