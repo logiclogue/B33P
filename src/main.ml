@@ -38,14 +38,13 @@ let action_to_actions (action : GraphicsV2.t) (state : GraphicsV2State.t) : Grap
         | SetAnimation _ -> []
     )
 
-let graphics_v2_to_graphics_v1_obs (graphics_v1_obs : GraphicsV1.t RxJS.observable) : GraphicsV2.t RxJS.observable =
+let graphics_v2_to_graphics_v1_obs (graphics_v2_obs : GraphicsV2.t RxJS.observable) : GraphicsV1.t RxJS.observable =
     let f ((_, old_state) : (GraphicsV1.t list * GraphicsV2State.t)) (action : GraphicsV2.t) (_ : int) =
         let state = actions_to_state old_state action in
 
         (action_to_actions action state, state) in
 
-    graphics_v1_obs
-        (* ((GraphicsV1.t list * GraphicsV2State.t) -> GraphicsV2.t -> int -> (GraphicsV1.t list * GraphicsV2State.t) -> 'b -> (GraphicsV2.t, (GraphicsV1.t list * GraphicsV2State.t)) RxJS.operator_function *)
+    graphics_v2_obs
         |> RxJS.scan f ([], GraphicsV2State.default)
         |> RxJS.map (fun (actions, _) -> actions)
         |> RxJS.concat_list
