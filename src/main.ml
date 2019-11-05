@@ -61,11 +61,12 @@ let action_to_actions (action : GraphicsV2.t) (state : GraphicsV2State.t) : Grap
     )
 
 let draw_state (state : GraphicsV2State.t) (time : int) : GraphicsV1.t list =
-    let draw_entity ((animation_id, (x, y)) : (string * (int * int))) : GraphicsV1.t list =
-        [] in (* TODO *)
+    let draw_entity ((entity_id, (x, y)) : (string * (int * int))) : GraphicsV1.t list =
+        [DrawText (entity_id, (x, y))] in
 
     let draw_entities (entities : (string * (int * int)) list) : GraphicsV1.t list =
-        [] in
+        List.map draw_entity entities
+            |> List.concat in
 
     draw_entities (GraphicsV2State.get_entities state)
 
@@ -75,15 +76,17 @@ let graphics_v2_to_graphics_v1_obs (graphics_v2_obs : GraphicsV2.t RxJS.observab
 
         (action_to_actions action state, state) in
 
-    let actions_obs = graphics_v2_obs
+    let actions_obs = graphics_v2_obs (* TODO *)
+        |> RxJS.map (draw_state GraphicsV2State.default)
         |> RxJS.scan f ([], GraphicsV2State.default)
         |> RxJS.map (fun (actions, _) -> actions)
         |> RxJS.concat_list in
 
     RxJS.interval 1000 RxJS.animation_frame
-        |> RxJS.with_latest_from actions_obs
-        |> RxJS.map (fun (_, action) -> action)
+        |> RxJS.with_latest_from state_obs
+        |> RxJS.map (draw_state GraphicsV2State.default)
         |> RxJS.tap Js.log
+        |> RxJS.concat_list
 
 let () =
     let canvas = RgbCanvas.create () in

@@ -22,3 +22,6 @@ let set_animation entity_id animation_id self =
     let { animation_to_entity } = self in
 
     { self with animation_to_entity = (entity_id, animation_id) :: animation_to_entity }
+
+let get_entities { entities } =
+    entities
