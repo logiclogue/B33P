@@ -2,12 +2,14 @@ type t = {
     animations : string -> (string list * int);
     entities : (string * (int * int)) list;
     animation_to_entity : (string * string) list;
+    tick_function : t -> t;
 }
 
 let default = {
     animations = (fun _ -> ([], 0));
     entities = [];
     animation_to_entity = [];
+    tick_function = (fun state -> state);
 }
 
 let set_animations animations self =
@@ -23,5 +25,15 @@ let set_animation entity_id animation_id self =
 
     { self with animation_to_entity = (entity_id, animation_id) :: animation_to_entity }
 
+let set_tick_function tick_function self =
+    { self with tick_function }
+
 let get_entities { entities } =
     entities
+
+let map_entities f self =
+    let entities = get_entities self in
+
+    let mapped_entities = List.map f entities in
+
+    { self with entities = mapped_entities }

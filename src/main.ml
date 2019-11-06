@@ -36,6 +36,9 @@ let actions_to_state (state : GraphicsV2State.t) (action : GraphicsV2.t) : Graph
 
         | SetAnimation (entity_id, animation_id) ->
             set_animation entity_id animation_id state
+
+        | SetTickFunction f ->
+            set_tick_function f state
     ))
 
 let action_to_actions (action : GraphicsV2.t) (state : GraphicsV2State.t) : GraphicsV1.t list =
@@ -58,6 +61,9 @@ let action_to_actions (action : GraphicsV2.t) (state : GraphicsV2State.t) : Grap
 
         | SetAnimation _ ->
             []
+
+        | SetTickFunction _ ->
+            []
     )
 
 let draw_state (state : GraphicsV2State.t) (time : int) : GraphicsV1.t list =
@@ -71,14 +77,11 @@ let draw_state (state : GraphicsV2State.t) (time : int) : GraphicsV1.t list =
     draw_entities (GraphicsV2State.get_entities state)
 
 let graphics_v2_to_graphics_v1_obs (graphics_v2_obs : GraphicsV2.t RxJS.observable) : GraphicsV1.t RxJS.observable =
-    let f ((_, old_state) : (GraphicsV1.t list * GraphicsV2State.t)) (action : GraphicsV2.t) (_ : int) =
-        let state = actions_to_state old_state action in
+    let f state action _ =
+        actions_to_state action state in
 
-        (action_to_actions action state, state) in
-
-    let state_obs = graphics_v2_obs (* TODO *)
-        |> RxJS.scan f ([], GraphicsV2State.default)
-        |> RxJS.map (fun (_, state) -> state) in
+    let state_obs = graphics_v2_obs
+        |> RxJS.scan f GraphicsV2State.default in (* TODO HERE *)
 
     RxJS.interval 1000 RxJS.animation_frame
         |> RxJS.with_latest_from state_obs
@@ -94,6 +97,9 @@ let () =
         SetFont CharacterSprites.find;
         SetTextColour Colours.white;
         SetAnimations animations;
+        SetTickFunction GraphicsV2State.(fun state ->
+            map_entities (fun (id, (x, y)) -> (id, (x + 1, y))) state
+        );
 
         CreateEntity ("Jordan", (50, 50));
         SetAnimation ("Jordan", "ABC");

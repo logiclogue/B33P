@@ -11,3 +11,4 @@ type t =
     | SetTextColour of Colours.t
     | CreateEntity of entity_id * coords
     | SetAnimation of entity_id * animation_id
+    | SetTickFunction of (GraphicsV2State.t -> GraphicsV2State.t)
