@@ -76,17 +76,15 @@ let graphics_v2_to_graphics_v1_obs (graphics_v2_obs : GraphicsV2.t RxJS.observab
 
         (action_to_actions action state, state) in
 
-    let actions_obs = graphics_v2_obs (* TODO *)
-        |> RxJS.map (draw_state GraphicsV2State.default)
+    let state_obs = graphics_v2_obs (* TODO *)
         |> RxJS.scan f ([], GraphicsV2State.default)
-        |> RxJS.map (fun (actions, _) -> actions)
-        |> RxJS.concat_list in
+        |> RxJS.map (fun (_, state) -> state) in
 
     RxJS.interval 1000 RxJS.animation_frame
         |> RxJS.with_latest_from state_obs
-        |> RxJS.map (draw_state GraphicsV2State.default)
-        |> RxJS.tap Js.log
+        |> RxJS.map (fun (time, state) -> draw_state state time)
         |> RxJS.concat_list
+        |> RxJS.tap Js.log
 
 let () =
     let canvas = RgbCanvas.create () in
@@ -99,6 +97,7 @@ let () =
 
         CreateEntity ("Jordan", (50, 50));
         SetAnimation ("Jordan", "ABC");
+        CreateEntity ("ABC", (0, 0));
     ]
         |> graphics_v2_to_graphics_v1_obs
         |> GraphicsV1ToSpriteObs.f
