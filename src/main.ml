@@ -77,11 +77,11 @@ let draw_state (state : GraphicsV2State.t) (time : int) : GraphicsV1.t list =
     draw_entities (GraphicsV2State.get_entities state)
 
 let graphics_v2_to_graphics_v1_obs (graphics_v2_obs : GraphicsV2.t RxJS.observable) : GraphicsV1.t RxJS.observable =
-    let f state action _ =
-        actions_to_state action state in
+    let f (state : GraphicsV2State.t) (action : GraphicsV2.t) _ : GraphicsV2State.t =
+        actions_to_state state action in
 
-    let state_obs = graphics_v2_obs
-        |> RxJS.scan f GraphicsV2State.default in (* TODO HERE *)
+    let state_obs =
+        RxJS.scan f GraphicsV2State.default graphics_v2_obs in (* TODO HERE *)
 
     RxJS.interval 1000 RxJS.animation_frame
         |> RxJS.with_latest_from state_obs
