@@ -31,6 +31,9 @@ let set_tick_function tick_function self =
 let get_entities { entities } =
     entities
 
+let get_tick_function { tick_function } =
+    tick_function
+
 let map_entities f self =
     let entities = get_entities self in
 

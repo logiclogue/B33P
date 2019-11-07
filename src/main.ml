@@ -39,6 +39,9 @@ let actions_to_state (state : GraphicsV2State.t) (action : GraphicsV2.t) : Graph
 
         | SetTickFunction f ->
             set_tick_function f state
+
+        | Tick ->
+            get_tick_function state state
     ))
 
 let action_to_actions (action : GraphicsV2.t) (state : GraphicsV2State.t) : GraphicsV1.t list =
@@ -64,6 +67,9 @@ let action_to_actions (action : GraphicsV2.t) (state : GraphicsV2State.t) : Grap
 
         | SetTickFunction _ ->
             []
+
+        | Tick ->
+            []
     )
 
 let draw_state (state : GraphicsV2State.t) (time : int) : GraphicsV1.t list =
@@ -81,7 +87,7 @@ let graphics_v2_to_graphics_v1_obs (graphics_v2_obs : GraphicsV2.t RxJS.observab
         actions_to_state state action in
 
     let state_obs =
-        RxJS.scan f GraphicsV2State.default graphics_v2_obs in (* TODO HERE *)
+        RxJS.scan f GraphicsV2State.default graphics_v2_obs in
 
     RxJS.interval 1000 RxJS.animation_frame
         |> RxJS.with_latest_from state_obs
@@ -104,6 +110,8 @@ let () =
         CreateEntity ("Jordan", (50, 50));
         SetAnimation ("Jordan", "ABC");
         CreateEntity ("ABC", (0, 0));
+
+        Tick; (* TODO *)
     ]
         |> graphics_v2_to_graphics_v1_obs
         |> GraphicsV1ToSpriteObs.f
