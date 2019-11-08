@@ -1,14 +1,14 @@
 let clear =
-    [EightColourCanvas.Clear]
+    [|EightColourCanvas.Clear|]
 
 let draw_sprite colourss x y =
     colourss
-        |> List.mapi (fun yth -> (
-            List.mapi (fun xth value -> (
+        |> Array.mapi (fun yth -> (
+            Array.mapi (fun xth value -> (
                 EightColourCanvas.SetPixelXY (value, xth + x, yth + y)
             ))
         ))
-        |> List.flatten
+        |> Array.flatten
 
 let f action =
     match action with

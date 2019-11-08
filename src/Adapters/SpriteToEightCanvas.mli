@@ -1,3 +1,3 @@
-val clear       : EightColourCanvas.t list
-val draw_sprite : int list list -> int -> int -> EightColourCanvas.t list
-val f           : SpriteCanvas.t -> EightColourCanvas.t list
+val clear       : EightColourCanvas.Set.t
+val draw_sprite : int list list -> int -> int -> EightColourCanvas.Set.t
+val f           : SpriteCanvas.t -> EightColourCanvas.Set.t
