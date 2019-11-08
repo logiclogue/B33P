@@ -89,30 +89,34 @@ let graphics_v2_to_graphics_v1_obs (graphics_v2_obs : GraphicsV2.t RxJS.observab
     let state_obs =
         RxJS.scan f GraphicsV2State.default graphics_v2_obs in
 
-    RxJS.interval 1000 RxJS.animation_frame
+    RxJS.interval 100 RxJS.animation_frame
         |> RxJS.with_latest_from state_obs
         |> RxJS.map (fun (time, state) -> draw_state state time)
         |> RxJS.concat_list
-        |> RxJS.tap Js.log
 
 let () =
     let canvas = RgbCanvas.create () in
 
-    RxJS.create_of_list GraphicsV2.[
-        SetSpriteSheet sprite_sheet;
-        SetFont CharacterSprites.find;
-        SetTextColour Colours.white;
-        SetAnimations animations;
-        SetTickFunction GraphicsV2State.(fun state ->
-            map_entities (fun (id, (x, y)) -> (id, (x + 1, y))) state
-        );
+    let tick_obs =
+        RxJS.interval 10 RxJS.animation_frame
+            |> RxJS.map (fun _ -> GraphicsV2.Tick) in
 
-        CreateEntity ("Jordan", (50, 50));
-        SetAnimation ("Jordan", "ABC");
-        CreateEntity ("ABC", (0, 0));
+    let init_obs =
+        RxJS.create_of_list GraphicsV2.[
+            SetSpriteSheet sprite_sheet;
+            SetFont CharacterSprites.find;
+            SetTextColour Colours.white;
+            SetAnimations animations;
+            SetTickFunction GraphicsV2State.(fun state ->
+                map_entities (fun (id, (x, y)) -> (id, (x + 1, y))) state
+            );
 
-        Tick; (* TODO *)
-    ]
+            CreateEntity ("Jordan", (50, 50));
+            SetAnimation ("Jordan", "ABC");
+            CreateEntity ("ABC", (0, 0));
+        ] in
+        
+    RxJS.merge [|tick_obs; init_obs|]
         |> graphics_v2_to_graphics_v1_obs
         |> GraphicsV1ToSpriteObs.f
         |> RxJS.map SpriteToEightCanvas.f
