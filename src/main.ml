@@ -116,13 +116,21 @@ let () =
             CreateEntity ("ABC", (0, 0));
         ] in
         
-    RxJS.merge [|tick_obs; init_obs|]
+    let action_obs = RxJS.merge [|tick_obs; init_obs|]
         |> graphics_v2_to_graphics_v1_obs
         |> GraphicsV1ToSpriteObs.f
-        |> RxJS.map SpriteToEightCanvas.f
-        |> RxJS.concat_list
-        |> RxJS.map EightColourToRgbCanvas.f
-        |> RxJS.concat_list
-        |> RxJS.map (fun action -> [action; RgbCanvasAction.PutData])
-        |> RxJS.concat_list
+        |> RxJS.merge_map (fun action ->
+            RxJS.create_of_list (SpriteToEightCanvas.f action)
+        )
+        |> RxJS.merge_map (fun action ->
+            RxJS.create_of_list (EightColourToRgbCanvas.f action)
+        )
+        |> RxJS.merge_map (fun action ->
+            RxJS.create_of_list [action]
+        ) in
+
+    let put_data_obs = RxJS.interval 100 RxJS.animation_frame
+        |> RxJS.map (fun _ -> RgbCanvasAction.PutData) in
+
+    RxJS.merge [|action_obs; put_data_obs|]
         |> RxJS.subscribe (RgbCanvas.dispatch canvas)
