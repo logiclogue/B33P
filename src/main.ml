@@ -98,7 +98,7 @@ let () =
     let canvas = RgbCanvas.create () in
 
     let tick_obs =
-        RxJS.interval 10 RxJS.animation_frame
+        RxJS.interval 100 RxJS.animation_frame
             |> RxJS.map (fun _ -> GraphicsV2.Tick) in
 
     let init_obs =
@@ -114,23 +114,25 @@ let () =
             CreateEntity ("Jordan", (50, 50));
             SetAnimation ("Jordan", "ABC");
             CreateEntity ("ABC", (0, 0));
-        ] in
+            CreateEntity ("BLAH", (0, 8));
+            CreateEntity ("ABC", (0, 16));
+        ]
+        |> RxJS.share () in
         
     let action_obs = RxJS.merge [|tick_obs; init_obs|]
         |> graphics_v2_to_graphics_v1_obs
         |> GraphicsV1ToSpriteObs.f
-        |> RxJS.merge_map (fun action ->
-            RxJS.create_of_list (SpriteToEightCanvas.f action)
-        )
-        |> RxJS.merge_map (fun action ->
-            RxJS.create_of_list (EightColourToRgbCanvas.f action)
-        )
-        |> RxJS.merge_map (fun action ->
-            RxJS.create_of_list [action]
-        ) in
+        |> RxJS.map SpriteToEightCanvas.f
+        |> RxJS.concat_list
+        |> RxJS.map EightColourToRgbCanvas.f
+        |> RxJS.concat_list
+        |> RxJS.map (fun action -> [action])
+        |> RxJS.concat_list
+        |> RxJS.share () in
 
     let put_data_obs = RxJS.interval 100 RxJS.animation_frame
-        |> RxJS.map (fun _ -> RgbCanvasAction.PutData) in
+        |> RxJS.map (fun _ -> RgbCanvasAction.PutData)
+        |> RxJS.share () in
 
     RxJS.merge [|action_obs; put_data_obs|]
         |> RxJS.subscribe (RgbCanvas.dispatch canvas)
