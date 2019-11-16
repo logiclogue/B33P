@@ -108,7 +108,7 @@ let () =
             SetTextColour Colours.white;
             SetAnimations animations;
             SetTickFunction GraphicsV2State.(fun state ->
-                map_entities (fun (id, (x, y)) -> (id, (x + 1, y))) state
+                map_entities (fun (id, (x, y)) -> (id, (x + 10, y))) state
             );
 
             CreateEntity ("Jordan", (50, 50));
