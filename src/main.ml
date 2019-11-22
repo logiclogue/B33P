@@ -80,6 +80,13 @@ let draw_state (state : GraphicsV2State.t) (time : int) : GraphicsV1.t list =
         List.map draw_entity entities
             |> List.concat in
 
+    let current_sprite (time : int) (animation : (string list * int)) : string =
+        let (sprites, interval) = animation in
+
+        let i = (time / interval) % List.length sprites in
+
+        List.nth sprites i in
+
     draw_entities (GraphicsV2State.get_entities state)
 
 let graphics_v2_to_graphics_v1_obs (graphics_v2_obs : GraphicsV2.t RxJS.observable) : GraphicsV1.t RxJS.observable =

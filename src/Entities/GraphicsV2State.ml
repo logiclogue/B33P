@@ -3,6 +3,7 @@ type t = {
     entities : (string * (int * int)) list;
     animation_to_entity : (string * string) list;
     tick_function : t -> t;
+    time: int;
 }
 
 let default = {
@@ -10,6 +11,7 @@ let default = {
     entities = [];
     animation_to_entity = [];
     tick_function = (fun state -> state);
+    time = 0;
 }
 
 let set_animations animations self =
