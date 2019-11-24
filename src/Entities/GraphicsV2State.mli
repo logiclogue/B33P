@@ -11,3 +11,5 @@ val get_entities : t -> (string * (int * int)) list
 val get_tick_function : t -> (t -> t)
 
 val map_entities : ((string * (int * int)) -> (string * (int * int))) -> t -> t
+
+val get_animation_from_entity : string -> t -> string

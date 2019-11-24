@@ -42,3 +42,8 @@ let map_entities f self =
     let mapped_entities = List.map f entities in
 
     { self with entities = mapped_entities }
+
+let get_animation_from_entity entity_id self =
+    let { animation_to_entity; animations } = self in
+
+    animation_id

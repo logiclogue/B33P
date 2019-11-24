@@ -73,24 +73,56 @@ let action_to_actions (action : GraphicsV2.t) (state : GraphicsV2State.t) : Grap
     )
 
 let draw_state (state : GraphicsV2State.t) (time : int) : GraphicsV1.t list =
-    let draw_entity ((entity_id, (x, y)) : (string * (int * int))) : GraphicsV1.t list =
-        [DrawText (entity_id, (x, y))] in
+    let get_animation_from_entity
+        (entity_id : GraphicsV2State.entity_id)
+        (state : GraphicsV2State.t)
+        : GraphicsV2State.animation_id =
 
-    let draw_entities (entities : (string * (int * int)) list) : GraphicsV1.t list =
-        List.map draw_entity entities
-            |> List.concat in
+        let animation_id = GraphicsV2State.get_animation_from_entity_id
 
-    let current_sprite (time : int) (animation : (string list * int)) : string =
+        animation_id
+
+    let current_sprite (time : int) (animation : (string list * int))
+        : string =
+
         let (sprites, interval) = animation in
 
-        let i = (time / interval) % List.length sprites in
+        let i = (time / interval) mod List.length sprites in
 
         List.nth sprites i in
 
-    draw_entities (GraphicsV2State.get_entities state)
+    let draw_entity ((entity_id, (x, y)) : (string * (int * int)))
+        : GraphicsV1.t list =
 
-let graphics_v2_to_graphics_v1_obs (graphics_v2_obs : GraphicsV2.t RxJS.observable) : GraphicsV1.t RxJS.observable =
-    let f (state : GraphicsV2State.t) (action : GraphicsV2.t) _ : GraphicsV2State.t =
+        let animation =
+            GraphicsV2State.get_animation_from_entity entity_id state in
+
+        let time = GraphicsV2State.get_time state in
+
+        let sprite = current_sprite time animation in
+
+        [DrawSprite (sprite, (x, y))] in
+
+    let draw_entities
+        (entities : (string * (int * int)) list)
+        (animations : string -> (string list * int))
+        : GraphicsV1.t list =
+
+        List.map draw_entity entities
+            |> List.concat in
+
+    let entities = GraphicsV2State.get_entities state in
+    let animations = GraphicsV2State.get_animations state in
+
+    draw_entities entities animations
+
+let graphics_v2_to_graphics_v1_obs
+    (graphics_v2_obs : GraphicsV2.t RxJS.observable)
+    : GraphicsV1.t RxJS.observable =
+
+    let f (state : GraphicsV2State.t) (action : GraphicsV2.t) _
+        : GraphicsV2State.t =
+
         actions_to_state state action in
 
     let state_obs =
