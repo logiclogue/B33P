@@ -6,23 +6,30 @@ type sprite_id = string
 type animation_id = string
 type animation = animation_id * sprite_id list * milliseconds
 
-type entity_attribute =
-    | Sprite of sprite_id
+type entity_attributes =
     | Animation of animation_id
-    | SubEntity of entity_id
+    | SubEntities of entity_id list
 
 type entity_id = string
-type entity = string * coords * entity_attribute list
+type entity = coords * entity_attributes
+
+type game_update = game_state -> game_state
+type scene_update = scene_state -> scene_state
+type entity_update = entity -> entity
+
+type action =
+    | GameUpdate of game_update
+    | SceneUpdate of scene_update
+    | EntityUpdate of entity_update
+    | SwitchScene of scene_id
 
 type scene_state = {
     entities: entity list;
-}
-
-type scene = {
-    entities: entity list;
-    blah: entity -> scene_state -> scene_state;
+    update: entity -> scene_state -> action
 }
 
 type game_state = {
+    time: milliseconds;
+    current_scene: scene_state;
     scenes: scene_state list;
 }
