@@ -80,7 +80,7 @@ let draw_state (state : GraphicsV2State.t) (time : int) : GraphicsV1.t list =
 
         let animation_id = GraphicsV2State.get_animation_from_entity_id
 
-        animation_id
+        animation_id in
 
     let current_sprite (time : int) (animation : (string list * int))
         : string =
