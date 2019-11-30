@@ -1,4 +1,4 @@
-let sprite_sheet id =
+let sprite_sheet id : Domain.sprite_sheet =
     match id with
     | "A" -> CharacterSprites.find 'A'
     | "B" -> CharacterSprites.find 'B'
@@ -11,13 +11,13 @@ let sprite_sheet id =
         (* TODO: THE REST OF SPRITE *)
     ]
 
-let animations id =
+let animations id : Domain.animations =
     match id with
     | "ABC" -> (["A"; "B"; "C"], 300)
     | _ -> (["A"], 1000)
 
-let actions_to_state (state : GraphicsV2State.t) (action : GraphicsV2.t) : GraphicsV2State.t =
-    GraphicsV2State.(GraphicsV2.(
+let actions_to_state (state : Domain.scene_state) (action : Domain.action) : Domain.scene_state =
+    Domain.(
         match action with
         | SetSpriteSheet sprite_sheet ->
             state
@@ -42,10 +42,10 @@ let actions_to_state (state : GraphicsV2State.t) (action : GraphicsV2.t) : Graph
 
         | Tick ->
             get_tick_function state state
-    ))
+    )
 
-let action_to_actions (action : GraphicsV2.t) (state : GraphicsV2State.t) : GraphicsV1.t list =
-    GraphicsV2.(
+let action_to_actions (action : Domain.action) (state : Domain.scene_state) : GraphicsV1.t list =
+    Domain.(
         match action with
         | SetSpriteSheet sprite_sheet ->
             [GraphicsV1.SetSpriteSheet sprite_sheet]
@@ -72,13 +72,13 @@ let action_to_actions (action : GraphicsV2.t) (state : GraphicsV2State.t) : Grap
             []
     )
 
-let draw_state (state : GraphicsV2State.t) (time : int) : GraphicsV1.t list =
+let draw_state (state : Domain.state) (time : Domain.time) : GraphicsV1.t list =
     let get_animation_from_entity
         (entity_id : GraphicsV2State.entity_id)
         (state : GraphicsV2State.t)
         : GraphicsV2State.animation_id =
 
-        let animation_id = GraphicsV2State.get_animation_from_entity_id
+        let animation_id = GraphicsV2State.get_animation_from_entity_id in
 
         animation_id in
 
@@ -117,16 +117,16 @@ let draw_state (state : GraphicsV2State.t) (time : int) : GraphicsV1.t list =
     draw_entities entities animations
 
 let graphics_v2_to_graphics_v1_obs
-    (graphics_v2_obs : GraphicsV2.t RxJS.observable)
+    (graphics_v2_obs : Domain.action RxJS.observable)
     : GraphicsV1.t RxJS.observable =
 
-    let f (state : GraphicsV2State.t) (action : GraphicsV2.t) _
-        : GraphicsV2State.t =
+    let f (state : Domain.scene_state) (action : Domain.action) _
+        : Domain.scene_state =
 
         actions_to_state state action in
 
     let state_obs =
-        RxJS.scan f GraphicsV2State.default graphics_v2_obs in
+        RxJS.scan f GraphicsV2State.default (* TODO *) graphics_v2_obs in
 
     RxJS.interval 100 RxJS.animation_frame
         |> RxJS.with_latest_from state_obs

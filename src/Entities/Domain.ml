@@ -11,16 +11,18 @@ type sprite_sheet = sprite_id -> sprite
 type font = char -> sprite
 
 type animation_id = string
-type animation = animation_id * sprite_id list * milliseconds
+type animation = sprite_id list * milliseconds
+type animations = animation_id -> animation
 
 type entity_id = string
 type entity_attributes =
     | Animation of animation_id
     | SubEntities of entity_id list
 type entity = coords * entity_attributes
+type entities = entity list
 
 type scene_state = {
-    entities : entity list;
+    entities : entities;
 }
 
 type game_state = {
@@ -40,19 +42,19 @@ type action =
     | SwitchScene of scene_id
     | SetSpriteSheet of sprite_sheet
     | SetFont of font
-    | SetAnimations of animation list
+    | SetAnimations of animations
     | SetTextColour of colour
     | CreateEntity of entity
     | SetAnimation of entity_id * animation_id
     | Tick
 
 type scene_seed = {
-    entities : entity list;
+    entities : entities;
     update : scene_update;
 }
 
 type game_seed = {
-    scenes : scene_seed list;
+    scenes : entities;
     update : game_update;
 }
 
